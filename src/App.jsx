@@ -15,8 +15,12 @@ import {
   useState,
 } from "react";
 
+/* ========= Helpers ========= */
+// Build URLs that respect Vite's BASE_URL (works locally and on GitHub Pages)
+const withBase = (p) => new URL(p, import.meta.env.BASE_URL).href;
+
 /* ========= Product data =========
-   Put all images in /public/images (so paths below work)
+   Put all images in /public/images
 */
 const PRODUCTS = [
   {
@@ -29,7 +33,7 @@ const PRODUCTS = [
     descriptionLong:
       "Aictronics Phone Pro features a pro-grade triple-camera system, a 120Hz OLED display, and all-day battery life. Designed for creators, gamers, and anyone who wants the very best.",
     price: 1199,
-    image: "/images/iphone17pro.png",
+    image: withBase("images/iphone17pro.png"),
     theme: "dark",
     eyebrow: "New",
   },
@@ -43,10 +47,10 @@ const PRODUCTS = [
     descriptionLong:
       "Phone Air packs serious performance into an incredibly thin and light design. Perfect for people who want power that practically disappears in your hand.",
     price: 999,
-    image: "/images/iphone-air.jpeg",
+    image: withBase("images/iphone-air.jpeg"),
     theme: "light",
     eyebrow: "New",
-    fit: "contain", // show full image in the fullscreen carousel (no crop)
+    fit: "contain",
   },
   {
     id: "macbook-pro-m5",
@@ -58,7 +62,7 @@ const PRODUCTS = [
     descriptionLong:
       "ProBook M5 brings workstation-class performance to a slim notebook. Edit 8K video, build games, and run heavy workflows with ease.",
     price: 1999,
-    image: "/images/macbookprom5.jpeg",
+    image: withBase("images/macbookprom5.jpeg"),
     theme: "dark",
     eyebrow: "Powerhouse",
   },
@@ -72,7 +76,7 @@ const PRODUCTS = [
     descriptionLong:
       "Buds Pro 3 deliver rich, immersive audio with powerful ANC, transparency mode, and AI-powered voice isolation so you sound clear on every call.",
     price: 299,
-    image: "/images/airpodspro-3.jpeg",
+    image: withBase("images/airpodspro-3.jpeg"),
     theme: "light",
     eyebrow: "Now available",
   },
@@ -838,7 +842,7 @@ function Header() {
           >
             Phone Pro
           </a>
-          <a
+        <a
             href="#iphone-air"
             onClick={(e) => {
               e.preventDefault();
@@ -924,7 +928,7 @@ function AppShell() {
     return () => window.removeEventListener("resize", setNavVar);
   }, []);
 
-  // NEW: global ripple for buttons/cards/links
+  // global ripple for buttons/cards/links
   useGlobalButtonRipple();
 
   return (
@@ -932,7 +936,7 @@ function AppShell() {
       <div className="page">
         <Header />
         <main className={isHome ? "main-snap" : "main-normal"}>
-          {/* key forces PageFade to run on each path change */}
+          {/* key forces PageFade on each path change */}
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageFade><HomePage /></PageFade>} />
             <Route path="/product/:productId" element={<PageFade><ProductPage /></PageFade>} />
@@ -946,10 +950,7 @@ function AppShell() {
   );
 }
 
-/* Export default component.
-   If your index mounts <App />, you’re good.
-   If you mount <BrowserRouter> in main.jsx instead, you can export AppShell.
-*/
+/* Export default component. */
 export default function App() {
   // If your main.jsx already has <BrowserRouter>, return <AppShell /> here:
   return <AppShell />;
